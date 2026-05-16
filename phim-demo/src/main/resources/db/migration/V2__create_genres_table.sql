@@ -1,0 +1,5 @@
+CREATE TABLE genres (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30),
+    slug VARCHAR(30)
+);
