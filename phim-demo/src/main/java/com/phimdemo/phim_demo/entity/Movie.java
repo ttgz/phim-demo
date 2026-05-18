@@ -1,5 +1,11 @@
 package com.phimdemo.phim_demo.entity;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,13 +24,22 @@ public class Movie {
     private String originalTitle;
     private String thumbnail;
     private Integer duration; // thời lượng
-    private Integer views;
-    private Boolean isPublic;
+    @Column(nullable = false)
+    private Integer views = 0;
+    @Column(nullable = false)
+    private Boolean isPublic = true;
     private String type;
     private Integer totalEpisodes;
     private String url;
-    private String createdAt;
     private Integer releaseYear;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    public Movie() {
+    }
 
     public Movie(Long id, String title) {
         this.id = id;
@@ -127,12 +142,20 @@ public class Movie {
         this.url = url;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public Integer getReleaseYear() {

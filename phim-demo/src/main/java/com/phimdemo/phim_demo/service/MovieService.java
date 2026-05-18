@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.phimdemo.phim_demo.repository.MovieRepository;
-
+import com.phimdemo.phim_demo.util.SlugUtil;
 import com.phimdemo.phim_demo.entity.Movie;
 
 @Service
@@ -21,6 +21,7 @@ public class MovieService {
     }
 
     public Movie storeMovie(Movie movie) {
+        movie.setSlug(SlugUtil.toSlug(movie.getTitle()));
         return movieRepository.save(movie);
     }
 }

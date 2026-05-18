@@ -7,7 +7,7 @@ CREATE TABLE movies (
     thumbnail VARCHAR(255),
     release_year INT,
     duration INT,
-    views INT DEFAULT 0,
+    views INT DEFAULT 0 NOT NULL,
     is_public BOOLEAN DEFAULT TRUE,
     type ENUM('single', 'series') NOT NULL,
     total_episodes INT DEFAULT 1,
