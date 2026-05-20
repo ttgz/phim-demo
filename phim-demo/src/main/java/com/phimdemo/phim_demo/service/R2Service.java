@@ -32,7 +32,7 @@ public class R2Service {
                         String fileName,
                         String contentType) {
 
-                String key = UUID.randomUUID() + "-" + fileName;
+                String key = "movies/" + UUID.randomUUID() + "-" + fileName;
 
                 PutObjectRequest objectRequest = PutObjectRequest.builder()
                                 .bucket(bucket)

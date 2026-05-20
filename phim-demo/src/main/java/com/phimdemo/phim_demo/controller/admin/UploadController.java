@@ -1,4 +1,4 @@
-package com.phimdemo.phim_demo.controller;
+package com.phimdemo.phim_demo.controller.admin;
 
 import com.phimdemo.phim_demo.response.UploadUrlResponse;
 import com.phimdemo.phim_demo.service.R2Service;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
-@RequestMapping("/api/uploads")
+@RequestMapping("/api/admin/uploads")
 public class UploadController {
     private final R2Service r2Service;
 
