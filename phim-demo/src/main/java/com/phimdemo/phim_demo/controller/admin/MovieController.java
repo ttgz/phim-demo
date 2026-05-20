@@ -3,6 +3,7 @@ package com.phimdemo.phim_demo.controller.admin;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,14 +13,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 
 import com.phimdemo.phim_demo.dto.CreateMovieRequest;
 import com.phimdemo.phim_demo.dto.UpdateMovieRequest;
 import com.phimdemo.phim_demo.entity.Movie;
 import com.phimdemo.phim_demo.repository.MovieRepository;
+import com.phimdemo.phim_demo.response.ApiResponse;
 import com.phimdemo.phim_demo.response.ApiResponseSuccess;
 import com.phimdemo.phim_demo.service.MovieService;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping("/api/admin/movies")
@@ -33,9 +37,11 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponseSuccess<List<Movie>>> getAllMovies() {
-        List<Movie> movieList = movieService.getAllMovies();
-        return ResponseEntity.ok(new ApiResponseSuccess<List<Movie>>(200, "", movieList));
+    public ResponseEntity<ApiResponse<Page<Movie>>> getAllMovies(@RequestParam(defaultValue = "1") @Min(1) int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<Movie> movieList = movieService.getMoviesNewestToOldest(page, size);
+        return ResponseEntity.ok(ApiResponse.success(movieList, "Thực hiện thành công", HttpStatus.OK.value()));
     }
 
     @PostMapping

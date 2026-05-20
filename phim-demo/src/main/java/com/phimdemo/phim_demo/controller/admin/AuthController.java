@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.phimdemo.phim_demo.dto.admin.CreateAdminRequest;
 import com.phimdemo.phim_demo.dto.admin.LoginAdminRequest;
+import com.phimdemo.phim_demo.dto.admin.RefreshRequest;
 import com.phimdemo.phim_demo.entity.Admin;
 import com.phimdemo.phim_demo.response.ApiResponse;
-import com.phimdemo.phim_demo.response.ApiResponseError;
 import com.phimdemo.phim_demo.response.ApiResponseSuccess;
 import com.phimdemo.phim_demo.response.auth.AuthResponse;
 import com.phimdemo.phim_demo.service.admin.AdminService;
@@ -50,4 +50,16 @@ public class AuthController {
         }
 
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<AuthResponse>> refresh(@Valid @RequestBody RefreshRequest refreshToken) {
+        try {
+            AuthResponse response = adminService.refreshAccessToken(refreshToken.getRefreshToken());
+            return ResponseEntity.ok(ApiResponse.success(response, "OK", HttpStatus.OK.value()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error(e, e.getMessage(), HttpStatus.UNAUTHORIZED.value()));
+        }
+    }
+
 }

@@ -2,6 +2,10 @@ package com.phimdemo.phim_demo.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.phimdemo.phim_demo.dto.UpdateMovieRequest;
@@ -17,8 +21,9 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+    public Page<Movie> getMoviesNewestToOldest(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("id").descending());
+        return this.movieRepository.findAll(pageable);
     }
 
     public Movie storeMovie(Movie movie) {
