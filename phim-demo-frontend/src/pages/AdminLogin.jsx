@@ -1,40 +1,74 @@
 import { useState } from 'react';
 import '../styles/login.css';
+import { loginSuccess } from '../features/auth/authSlice';
+import { useDispatch } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router-dom';
+import api from '../services/axios';
+import { loginAdmin } from '../services/admin/loginService';
+import { store } from '../app/store';
+import { toast } from 'react-toastify';
 
 export function AdminLogin({ onLogin }) {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setError('');
-  //   setLoading(true);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  //   try {
-  //     // TODO: Replace with actual API call
-  //     const response = await fetch('/api/admin/login', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ email, password }),
-  //     });
 
-  //     if (!response.ok) {
-  //       throw new Error('Đăng nhập thất bại');
-  //     }
+  const handleSubmit = async (event) => {
+    // try {
+    //   event.preventDefault()
+    //   const response = await loginAdmin({ username, password });
+    //   const data = response.data;
+    //   if (data.success) {
+    //     dispatch(loginSuccess({
+    //       accessToken: data.data.accessToken,
+    //       user: "Admin"
+    //     }));
+    //     navigate('/admin');
+    //     toast.success("Đăng nhập thành công!");
+    //   }
 
-  //     const data = await response.json();
-  //     localStorage.setItem('adminToken', data.token);
-  //     localStorage.setItem('adminUser', JSON.stringify(data.user));
-  //     onLogin(data.user);
-  //   } catch (err) {
-  //     setError(err.message || 'Lỗi đăng nhập');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+    // } catch (e) {
+    //   toast.warning(e.response.data.message);
+    // }
+    event.preventDefault();
 
+    try {
+
+      const response = await toast.promise(
+
+        loginAdmin({
+          username,
+          password
+        }),
+
+        {
+          pending: "Đang đăng nhập...",
+          success: "Đăng nhập thành công",
+          error: "Đăng nhập thất bại"
+        }
+
+      );
+
+      const data = response.data;
+
+      dispatch(loginSuccess({
+        accessToken: data.data.accessToken,
+        user: "Admin"
+      }));
+
+      navigate("/admin");
+
+    } catch (e) {
+
+      toast.warning(e.response.data.message);
+    }
+
+  }
   return (
     <div className="login-container">
       <div className="login-box">
@@ -43,15 +77,15 @@ export function AdminLogin({ onLogin }) {
           <p>Quản Lý Phim</p>
         </div>
 
-        <form  className="login-form">
+        <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
-              id="email"
-              type="email"
-              placeholder="admin@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="username"
+              type="text"
+              placeholder="admin"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
               disabled={loading}
             />

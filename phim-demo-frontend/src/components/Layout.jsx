@@ -1,8 +1,17 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { NavLink, Outlet } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { logout } from '../features/auth/authSlice';
 
-export function Header({ user, onLogout, isAuthenticated }) {
+export function Header({ user, isAuthenticated }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout);
+    navigate('/admin/login');
+  }
+
   return (
     <div className="header">
       <h1>🎬 Quản Lý Phim</h1>
@@ -10,7 +19,7 @@ export function Header({ user, onLogout, isAuthenticated }) {
         <div className="user-profile">
           <div className="user-avatar">{user?.name || 'A'}</div>
           <span>{user?.name || 'Admin'}</span>
-          <button onClick={onLogout} className="logout-btn">
+          <button onClick={handleLogout} className="logout-btn">
             Đăng Xuất
           </button>
         </div>
@@ -94,6 +103,7 @@ export function Footer() {
 
 export function Layout({ children, activeNav, onNavChange, onLogout }) {
 
+
   const user = useSelector((state) => {
     state.auth.user;
   });
@@ -101,11 +111,13 @@ export function Layout({ children, activeNav, onNavChange, onLogout }) {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
 
+
+
   return (
     <div className="layout">
       <Sidebar activeNav={activeNav} onNavChange={onNavChange} />
       <div className="main-content">
-        <Header user={user} onLogout={onLogout} isAuthenticated={isAuthenticated} />
+        <Header user={user} isAuthenticated={isAuthenticated} />
         <div className="content">
           <Outlet />
         </div>

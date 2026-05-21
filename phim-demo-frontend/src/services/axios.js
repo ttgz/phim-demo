@@ -4,7 +4,7 @@ import { getRefreshToken, removeRefreshToken } from "../utils/token";
 import { logout, setAccessToken } from "../features/auth/authSlice";
 
 const api = axios.create({
-    baseUrl: "http://localhost:8080/api"
+    baseURL: "http://localhost:8080/api"
 });
 
 
@@ -75,7 +75,7 @@ api.interceptors.response.use(
 
         removeRefreshToken();
 
-        window.location.href = "/login";
+        window.location.href = "/admin/login";
 
         return Promise.reject(refreshError);
       }

@@ -13,23 +13,24 @@ import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
     {
-        path: "/",
+        path: "/admin",
         element: <PrivateRoute/>,
         children: [{
             index: true,
             element: <Dashboard />
         },
         {
-            path: "/movies",
+            path: "movies",
             element: <Movie/>
         }
     ]
     },
 
     {
-        path: "/login",
+        path: "/admin/login",
         element: <AdminLogin />
     },
+    
     {
         path: "*",
         element: <NotFound />
