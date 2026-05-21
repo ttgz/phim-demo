@@ -3,11 +3,18 @@ import { Dashboard } from "../pages/Dashboard";
 import { AdminLogin } from "../pages/AdminLogin";
 import { Layout } from "../components/Layout";
 import { Movie } from "../pages/Movie";
+import { NotFound } from "../pages/NotFound";
+import { useSelector } from "react-redux";
+import { logout } from "../features/auth/authSlice";
+import PrivateRoute from "./PrivateRoute";
+
+
+
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <Layout activeNav="dashboard"  onNavChange={() => {}} user={{ name: 'Admin' }}/>,
+        element: <PrivateRoute/>,
         children: [{
             index: true,
             element: <Dashboard />
@@ -18,16 +25,13 @@ export const router = createBrowserRouter([
         }
     ]
     },
-    {
-        path: "/admin",
-        element: <Layout />,
-        children: [{
-            index: true,
-            element: <Dashboard />
-        }]
-    },
+
     {
         path: "/login",
         element: <AdminLogin />
+    },
+    {
+        path: "*",
+        element: <NotFound />
     }
 ]);

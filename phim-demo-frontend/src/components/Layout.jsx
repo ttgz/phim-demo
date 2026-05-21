@@ -1,13 +1,14 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NavLink, Outlet } from 'react-router-dom';
 
-export function Header({ user, onLogout }) {
+export function Header({ user, onLogout, isAuthenticated }) {
   return (
     <div className="header">
       <h1>🎬 Quản Lý Phim</h1>
       <div className="header-actions">
         <div className="user-profile">
-          <div className="user-avatar">{user?.name?.[0] || 'A'}</div>
+          <div className="user-avatar">{user?.name || 'A'}</div>
           <span>{user?.name || 'Admin'}</span>
           <button onClick={onLogout} className="logout-btn">
             Đăng Xuất
@@ -61,8 +62,8 @@ export function Sidebar({ activeNav, onNavChange }) {
         <div className="nav-section">
           <div className="nav-section-title">Menu</div>
           {menuItems.map((item) => (
-            <NavLink key={item.id} to={item.id} className={`nav-link ${activeNav === item.id ? 'active' : ''}`}> 
-            <span className="nav-icon">{item.icon}</span>
+            <NavLink key={item.id} to={item.id} className={`nav-link ${activeNav === item.id ? 'active' : ''}`}>
+              <span className="nav-icon">{item.icon}</span>
               <span>{item.label}</span>
             </NavLink>
             // <a
@@ -91,12 +92,20 @@ export function Footer() {
   );
 }
 
-export function Layout({ children, activeNav, onNavChange, user, onLogout }) {
+export function Layout({ children, activeNav, onNavChange, onLogout }) {
+
+  const user = useSelector((state) => {
+    state.auth.user;
+  });
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+
   return (
     <div className="layout">
       <Sidebar activeNav={activeNav} onNavChange={onNavChange} />
       <div className="main-content">
-        <Header user={user} onLogout={onLogout} />
+        <Header user={user} onLogout={onLogout} isAuthenticated={isAuthenticated} />
         <div className="content">
           <Outlet />
         </div>
