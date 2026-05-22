@@ -7,6 +7,7 @@ import api from '../services/axios';
 import { loginAdmin } from '../services/admin/loginService';
 import { store } from '../app/store';
 import { toast } from 'react-toastify';
+import { setRefreshToken } from '../utils/token';
 
 export function AdminLogin({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -60,8 +61,9 @@ export function AdminLogin({ onLogin }) {
         accessToken: data.data.accessToken,
         user: "Admin"
       }));
+      setRefreshToken(data.data.refreshToken);
 
-      navigate("/admin");
+      navigate('/admin');
 
     } catch (e) {
 
@@ -116,7 +118,7 @@ export function AdminLogin({ onLogin }) {
         </form>
 
         <div className="login-footer">
-          <p>© 2024 CinemaHub - Hệ Thống Quản Lý Phim</p>
+          <p>© 2026 CinemaHub - Hệ Thống Quản Lý Phim</p>
         </div>
       </div>
     </div>

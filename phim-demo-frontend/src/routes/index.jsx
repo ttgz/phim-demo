@@ -7,6 +7,7 @@ import { NotFound } from "../pages/NotFound";
 import { useSelector } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 import PrivateRoute from "./PrivateRoute";
+import NotAuthenRoute from "./NotAuthenRoute";
 
 
 
@@ -14,23 +15,27 @@ import PrivateRoute from "./PrivateRoute";
 export const router = createBrowserRouter([
     {
         path: "/admin",
-        element: <PrivateRoute/>,
+        element: <PrivateRoute />,
         children: [{
             index: true,
             element: <Dashboard />
         },
         {
+            path: "dashboard",
+            element: <Dashboard />
+        },
+        {
             path: "movies",
-            element: <Movie/>
+            element: <Movie />
         }
-    ]
+        ]
     },
 
     {
         path: "/admin/login",
-        element: <AdminLogin />
+        element: <NotAuthenRoute />
     },
-    
+
     {
         path: "*",
         element: <NotFound />

@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { logout } from '../features/auth/authSlice';
+import { removeRefreshToken } from '../utils/token';
 
 export function Header({ user, isAuthenticated }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(logout);
+    removeRefreshToken();
+    dispatch(logout());
     navigate('/admin/login');
   }
 
@@ -31,32 +33,32 @@ export function Header({ user, isAuthenticated }) {
 export function Sidebar({ activeNav, onNavChange }) {
   const menuItems = [
     {
-      id: '/',
+      id: 'dashboard',
       label: 'Dashboard',
       icon: '📊',
     },
     {
-      id: '/movies',
+      id: 'movies',
       label: 'Danh Sách Phim',
       icon: '🎥',
     },
     {
-      id: '/categories',
+      id: 'categories',
       label: 'Thể Loại',
       icon: '🏷️',
     },
     {
-      id: '/users',
+      id: 'users',
       label: 'Người Dùng',
       icon: '👥',
     },
     {
-      id: '/stats',
+      id: 'stats',
       label: 'Thống Kê',
       icon: '📈',
     },
     {
-      id: '/settings',
+      id: 'settings',
       label: 'Cài Đặt',
       icon: '⚙️',
     },

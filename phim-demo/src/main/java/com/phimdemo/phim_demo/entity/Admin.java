@@ -23,6 +23,10 @@ public class Admin {
 
     }
 
+    public Admin(String username) {
+        this.username = username;
+    }
+
     public Long getId() {
         return id;
     }

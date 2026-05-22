@@ -63,4 +63,13 @@ public class AdminService {
         }
         throw new RuntimeException("Refresh token không hợp lệ hoặc hết hạn");
     }
+
+    public Admin getMe(String accessToken) {
+        String username = jwtService.extractUsername(accessToken);
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+        if (jwtService.isTokenValid(accessToken, userDetails)) {
+            return new Admin(userDetails.getUsername());
+        }
+        throw new RuntimeException("token không hợp lệ hoặc hết hạn");
+    }
 }

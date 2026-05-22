@@ -1,14 +1,15 @@
 import { useSelector } from "react-redux"
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { Layout } from "../components/Layout";
 
 export default function PrivateRoute() {
     const isAuthenticated = useSelector((state) =>
         state.auth.isAuthenticated
     );
+    console.log(isAuthenticated);
     if (!isAuthenticated) {
         return <Navigate to="/admin/login" replace />
     }
 
-    return <Layout />
+    return <Layout > <Outlet/> </Layout>
 }

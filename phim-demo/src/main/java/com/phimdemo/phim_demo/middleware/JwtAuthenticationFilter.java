@@ -13,6 +13,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.phimdemo.phim_demo.service.JwtService;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,27 +41,53 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        String token = authHeader.substring(7);
-        String username = jwtService.extractUsername(token);
+        try {
+            String token = authHeader.substring(7);
+            String username = jwtService.extractUsername(token);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (jwtService.isTokenValid(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities() // Nạp quyền tạm thời "ADMIN" vào đây
-                );
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                if (jwtService.isTokenValid(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities() // Nạp quyền tạm thời "ADMIN" vào đây
+                    );
 
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                // ĐÓNG DẤU HỢP PHÁP: Lưu thông tin tài khoản vào hệ thống bộ nhớ của Spring
-                // Security
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                    // ĐÓNG DẤU HỢP PHÁP: Lưu thông tin tài khoản vào hệ thống bộ nhớ của Spring
+                    // Security
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    filterChain.doFilter(request, response);
+                }
             }
-            filterChain.doFilter(request, response);
-        }
 
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            response.setContentType("application/json");
+
+            response.getWriter().write("""
+                        {
+                            "message": "Access token expired"
+                        }
+                    """);
+
+            return;
+        } catch (JwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            response.setContentType("application/json");
+
+            response.getWriter().write("""
+                        {
+                            "message": "Invalid token"
+                        }
+                    """);
+
+            return;
+        }
     }
 
 }

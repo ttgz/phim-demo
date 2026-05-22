@@ -3,6 +3,9 @@ package com.phimdemo.phim_demo.controller.admin;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,9 +17,13 @@ import com.phimdemo.phim_demo.entity.Admin;
 import com.phimdemo.phim_demo.response.ApiResponse;
 import com.phimdemo.phim_demo.response.ApiResponseSuccess;
 import com.phimdemo.phim_demo.response.auth.AuthResponse;
+import com.phimdemo.phim_demo.response.auth.Me;
 import com.phimdemo.phim_demo.service.admin.AdminService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
@@ -56,6 +63,17 @@ public class AuthController {
         try {
             AuthResponse response = adminService.refreshAccessToken(refreshToken.getRefreshToken());
             return ResponseEntity.ok(ApiResponse.success(response, "OK", HttpStatus.OK.value()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error(e, e.getMessage(), HttpStatus.UNAUTHORIZED.value()));
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<Me>> me(Authentication authentication) {
+        try {
+            Me me = new Me((User) authentication.getPrincipal());
+            return ResponseEntity.ok(ApiResponse.success(me, "Thực hiện thành công", 0));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.error(e, e.getMessage(), HttpStatus.UNAUTHORIZED.value()));

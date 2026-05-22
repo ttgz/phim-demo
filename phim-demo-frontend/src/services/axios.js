@@ -19,7 +19,6 @@ api.interceptors.request.use(
       config.headers.Authorization =
         `Bearer ${accessToken}`;
     }
-
     return config;
   },
 
@@ -35,7 +34,7 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     if (
-      error.response?.status === 401 &&
+      (error.response?.status === 401 || error.response?.status === 403) &&
       !originalRequest._retry
     ) {
 
@@ -55,7 +54,7 @@ api.interceptors.response.use(
         );
 
         const newAccessToken =
-          response.data.accessToken;
+          response.data.data.accessToken;
 
         // lưu access token mới vào redux
         store.dispatch(
@@ -65,7 +64,6 @@ api.interceptors.response.use(
         // gắn token mới vào request cũ
         originalRequest.headers.Authorization =
           `Bearer ${newAccessToken}`;
-
         // gọi lại request cũ
         return api(originalRequest);
 

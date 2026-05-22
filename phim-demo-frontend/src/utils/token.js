@@ -1,5 +1,5 @@
 export const getRefreshToken = () => {
-    return localStorage.getItem("refreshToken");
+  return localStorage.getItem("refreshToken");
 }
 
 export const setRefreshToken = (token) => {
