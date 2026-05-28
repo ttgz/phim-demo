@@ -3,8 +3,10 @@ import { store } from "../app/store";
 import { getRefreshToken, removeRefreshToken } from "../utils/token";
 import { logout, setAccessToken } from "../features/auth/authSlice";
 
+
+const BASE_URL = import.meta.env.VITE_API_URL
 const api = axios.create({
-    baseURL: "http://localhost:8080/api"
+    baseURL: BASE_URL
 });
 
 
@@ -47,7 +49,7 @@ api.interceptors.response.use(
 
         // gọi refresh token
         const response = await axios.post(
-          "http://localhost:8080/api/admin/auth/refresh",
+          BASE_URL+ "/admin/auth/refresh",
           {
             refreshToken,
           }

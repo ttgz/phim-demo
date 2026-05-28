@@ -1,11 +1,17 @@
 package com.phimdemo.phim_demo.service;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Utilities;
+import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
@@ -16,6 +22,8 @@ import com.phimdemo.phim_demo.response.UploadUrlResponse;
 @Service
 public class R2Service {
 
+        private final S3Client s3Client;
+
         @Value("${cloudflare.r2.bucket}")
         private String bucket;
 
@@ -24,8 +32,9 @@ public class R2Service {
 
         private final S3Presigner presigner;
 
-        public R2Service(S3Presigner presigner) {
+        public R2Service(S3Presigner presigner, S3Client s3Client) {
                 this.presigner = presigner;
+                this.s3Client = s3Client;
         }
 
         public UploadUrlResponse createUploadUrl(
@@ -52,4 +61,36 @@ public class R2Service {
                                 publicUrl + "/" + key);
         }
 
+        public String uploadThumbnail(
+                        MultipartFile file) {
+
+                try {
+                        S3Utilities s3Utilities = s3Client.utilities();
+                        String key = "thumbnails/"
+                                        + UUID.randomUUID()
+                                        + "-"
+                                        + file.getOriginalFilename();
+
+                        PutObjectRequest request = PutObjectRequest.builder()
+                                        .bucket(bucket)
+                                        .key(key)
+                                        .contentType(
+                                                        file.getContentType())
+                                        .build();
+
+                        s3Client.putObject(
+                                        request,
+                                        RequestBody.fromInputStream(
+                                                        file.getInputStream(),
+                                                        file.getSize()));
+
+                        return publicUrl + "/" + key;
+                } catch (
+
+                IOException e)
+
+                {
+                        throw new RuntimeException(e);
+                }
+        }
 }

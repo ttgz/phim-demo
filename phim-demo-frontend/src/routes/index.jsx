@@ -3,6 +3,8 @@ import { Dashboard } from "../pages/Dashboard";
 import { AdminLogin } from "../pages/AdminLogin";
 import { Layout } from "../components/Layout";
 import { Movie } from "../pages/Movie";
+import { MovieCreate } from "../pages/MovieCreate";
+import { MovieEdit } from "../pages/MovieEdit";
 import { NotFound } from "../pages/NotFound";
 import { useSelector } from "react-redux";
 import { logout } from "../features/auth/authSlice";
@@ -27,6 +29,14 @@ export const router = createBrowserRouter([
         {
             path: "movies",
             element: <Movie />
+        },
+        {
+            path: "movies/create",
+            element: <MovieCreate />
+        },
+        {
+            path: "movies/:movieId/edit",
+            element: <MovieEdit />
         }
         ]
     },

@@ -6,7 +6,6 @@ export default function PrivateRoute() {
     const isAuthenticated = useSelector((state) =>
         state.auth.isAuthenticated
     );
-    console.log(isAuthenticated);
     if (!isAuthenticated) {
         return <Navigate to="/admin/login" replace />
     }
