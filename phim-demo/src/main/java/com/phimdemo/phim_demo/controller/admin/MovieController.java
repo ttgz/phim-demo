@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,6 +65,12 @@ public class MovieController {
             @Valid @RequestBody UpdateMovieRequest request) {
         Movie updatedMovie = movieService.updateMovie(id, request);
         return ResponseEntity.ok(new ApiResponseSuccess<Movie>(200, "Cập nhật phim thành công", updatedMovie));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<String>> deleteMovie(@PathVariable Long id) {
+        this.movieService.deleteMoive(id);
+        return ResponseEntity.ok(ApiResponse.success("Xóa movie thành công", 204));
     }
 
 }

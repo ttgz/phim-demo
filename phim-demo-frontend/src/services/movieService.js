@@ -44,8 +44,8 @@ export const uploadMovie = (uploadUrl, video, type, onProgress) => {
 export const uploadThumbnail = (image) => {
     return api.post('/admin/uploads/thumbnail', image)
 }
-export const updateVideoUrlToMovie = (movieId, fileUrl, thumbnailUrl) => {
-    return api.put(`/admin/movies/${movieId}`, { url: fileUrl, thumbnail: thumbnailUrl });
+export const updateVideoUrlToMovie = (movieId, fileUrl, thumbnailUrl, urlKey, thumbnailKey) => {
+    return api.put(`/admin/movies/${movieId}`, { url: fileUrl, thumbnail: thumbnailUrl, urlKey: urlKey, thumbnailKey: thumbnailKey });
 }
 
 export const getMovieById = (movieId) => {
@@ -54,4 +54,8 @@ export const getMovieById = (movieId) => {
 
 export const updateMovie = (movieId, data) => {
     return api.put(`/admin/movies/${movieId}`, data);
+}
+
+export const deleteMovie = (movieId) => {
+    return api.delete(`/admin/movies/${movieId}`);
 }

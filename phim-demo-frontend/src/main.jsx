@@ -5,6 +5,8 @@ import App from './App.jsx'
 import { Provider } from 'react-redux'
 import { store } from './app/store.js'
 import { BrowserRouter } from 'react-router-dom'
+import 'alertifyjs/build/css/alertify.css';
+import 'alertifyjs/build/css/themes/default.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

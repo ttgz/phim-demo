@@ -18,7 +18,6 @@ const movieSchema = z.object({
         (file) => file.type.startsWith('video/'),
         'URL phải là file video.'
     ),
-    description: z.string().min(1, 'Mô tả là bắt buộc.'),
     releaseYear: z.coerce.number().int().gte(1900, 'Năm phát hành không hợp lệ.'),
     duration: z.coerce.number().positive('Thời lượng phải lớn hơn 0.'),
     totalEpisodes: z.coerce.number().int().positive('Số tập phải lớn hơn 0.'),
@@ -27,7 +26,7 @@ const movieSchema = z.object({
 });
 
 const defaultValues = {
-    title: ' ',
+    title: '',
     originalTitle: '',
     description: '',
     releaseYear: 2026,
@@ -58,10 +57,10 @@ export function MovieCreate() {
         };
 
         try {
+
             const toastId = toast.loading(
                 "Đang tải video..."
             );
-
             const response = await createMovie(payload);
             const movieId = response.data.data.id;
 
@@ -69,6 +68,7 @@ export function MovieCreate() {
             formData.append("image", data.thumbnail);
             const thumbnailUrlResponse = await uploadThumbnail(formData);
             const thumbnailUrl = thumbnailUrlResponse.data.fileUrl;
+            const thumbnailKey= thumbnailUrlResponse.data.key;
 
             const video = data.url;
             const fileName = data.url.name;
@@ -76,6 +76,7 @@ export function MovieCreate() {
             const resignedUrlResponse = await getResignedUrl(fileName, contentType);
             const uploadUrl = resignedUrlResponse.data.uploadUrl;
             const fileUrl = resignedUrlResponse.data.fileUrl;
+            const urlKey = resignedUrlResponse.data.key;
             const uploadMovieReponse = await uploadMovie(uploadUrl, video, contentType, (percent) => {
 
                 toast.update(toastId, {
@@ -85,7 +86,8 @@ export function MovieCreate() {
                 });
 
             });
-            const updateUrlToVideo = await updateVideoUrlToMovie(movieId, fileUrl, thumbnailUrl);
+
+            const updateUrlToVideo = await updateVideoUrlToMovie(movieId, fileUrl, thumbnailUrl, urlKey, thumbnailKey);
 
             toast.update(toastId, {
                 render: "Upload thành công",

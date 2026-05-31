@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Utilities;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
@@ -58,14 +59,14 @@ public class R2Service {
 
                 return new UploadUrlResponse(
                                 presignedRequest.url().toString(),
-                                publicUrl + "/" + key);
+                                publicUrl + "/" + key, key);
         }
 
-        public String uploadThumbnail(
+        public UploadUrlResponse uploadThumbnail(
                         MultipartFile file) {
 
                 try {
-                        S3Utilities s3Utilities = s3Client.utilities();
+                        // S3Utilities s3Utilities = s3Client.utilities();
                         String key = "thumbnails/"
                                         + UUID.randomUUID()
                                         + "-"
@@ -84,7 +85,7 @@ public class R2Service {
                                                         file.getInputStream(),
                                                         file.getSize()));
 
-                        return publicUrl + "/" + key;
+                        return new UploadUrlResponse("", publicUrl + "/" + key, key);
                 } catch (
 
                 IOException e)
@@ -92,5 +93,13 @@ public class R2Service {
                 {
                         throw new RuntimeException(e);
                 }
+        }
+
+        public void deleteFile(String key) {
+                DeleteObjectRequest req = DeleteObjectRequest.builder()
+                                .bucket(this.bucket)
+                                .key(key)
+                                .build();
+                s3Client.deleteObject(req);
         }
 }

@@ -38,6 +38,9 @@ public class Movie {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    private String urlKey;
+    private String thumbnailKey;
+
     public Movie() {
     }
 
@@ -164,6 +167,22 @@ public class Movie {
 
     public void setReleaseYear(Integer releaseYear) {
         this.releaseYear = releaseYear;
+    }
+
+    public String getUrlKey() {
+        return this.urlKey;
+    }
+
+    public void setUrlKey(String urlKey) {
+        this.urlKey = urlKey;
+    }
+
+    public String getThumbnailKey() {
+        return thumbnailKey;
+    }
+
+    public void setThumbnailKey(String thumbnailKey) {
+        this.thumbnailKey = thumbnailKey;
     }
 
     @Override

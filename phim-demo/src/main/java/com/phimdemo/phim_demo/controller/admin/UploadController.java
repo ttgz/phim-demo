@@ -28,8 +28,8 @@ public class UploadController {
     @PostMapping("/thumbnail")
     public ResponseEntity<UploadUrlResponse> postMethodName(@RequestParam("image") MultipartFile file) {
 
-        String fileUrl = r2Service.uploadThumbnail(file);
-        return ResponseEntity.ok().body(new UploadUrlResponse("", fileUrl));
+        UploadUrlResponse upload = r2Service.uploadThumbnail(file);
+        return ResponseEntity.ok().body(upload);
     }
 
 }

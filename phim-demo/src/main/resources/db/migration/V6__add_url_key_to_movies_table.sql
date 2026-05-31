@@ -1,0 +1,4 @@
+ALTER TABLE movies 
+ADD url_key VARCHAR(255) NULL;
+ALTER TABLE movies 
+ADD thumbnail_key VARCHAR(255) NULL;

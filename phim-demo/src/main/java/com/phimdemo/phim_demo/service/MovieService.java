@@ -15,10 +15,12 @@ import com.phimdemo.phim_demo.entity.Movie;
 
 @Service
 public class MovieService {
+    private final R2Service r2Service;
     private final MovieRepository movieRepository;
 
-    public MovieService(MovieRepository movieRepository) {
+    public MovieService(MovieRepository movieRepository, R2Service r2Service) {
         this.movieRepository = movieRepository;
+        this.r2Service = r2Service;
     }
 
     public Page<Movie> getMoviesNewestToOldest(int page, int size) {
@@ -55,7 +57,23 @@ public class MovieService {
         request.getTotalEpisodes().ifPresent(existingMovie::setTotalEpisodes);
         request.getReleaseYear().ifPresent(existingMovie::setReleaseYear);
         request.getUrl().ifPresent(existingMovie::setUrl);
+        request.getUrlKey().ifPresent(existingMovie::setUrlKey);
+        request.getThumbnailKey().ifPresent(existingMovie::setThumbnailKey);
 
         return movieRepository.save(existingMovie);
+    }
+
+    public void deleteMoive(Long movieId) {
+        Movie movie = this.movieRepository.findById(movieId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy movie"));
+        if (movie.getUrlKey() != null) {
+            this.r2Service.deleteFile(movie.getUrlKey());
+        }
+
+        if (movie.getThumbnailKey() != null) {
+            this.r2Service.deleteFile(movie.getThumbnailKey());
+        }
+
+        this.movieRepository.delete(movie);
     }
 }

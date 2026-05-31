@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import '../styles/movie.css';
-import { getMovies } from '../services/movieService';
+import { deleteMovie, getMovies } from '../services/movieService';
 import { useNavigate } from 'react-router-dom';
+import alertify from 'alertifyjs';
+import { toast } from 'react-toastify';
+
 
 export function Movie() {
     const [searchText, setSearchText] = useState('');
@@ -19,7 +22,7 @@ export function Movie() {
         (async () => {
             try {
                 const response = await getMovies(currentPage, 10);
-                console.log(response.data);
+
                 if (response.data.success) {
                     setMovies(response.data.data.content);
                     setCurrentPage(response.data.data.number + 1);
@@ -46,7 +49,24 @@ export function Movie() {
     };
 
     const handleDelete = (movie) => {
-        navigate(`/admin/movies/${movie.id}/edit`);
+        alertify.confirm("Xác nhận xóa", "Bạn có chắc chắn muốn xóa phim này? Không thể hoàn tác sau khi xóa!!", async () => {
+            try {
+                const res = await deleteMovie(movie.id);
+                if (res.data.success) {
+                    setMovies((movies) => {
+                        return movies.filter((item) => item.id !== movie.id);
+                    });
+                    toast.success("Xóa thành công");
+                }
+
+            } catch (e) {
+
+            }
+
+
+        }, () => {
+
+        });
     };
 
     const rowsPerPage = 5;
@@ -70,9 +90,9 @@ export function Movie() {
         });
     }, [movies, searchText, filterType, filterPublic]);
 
-  
 
- 
+
+
 
     const paginatedMovies = useMemo(() => {
         const startIndex = (currentPage - 1) * rowsPerPage;

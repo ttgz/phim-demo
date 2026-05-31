@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { getMovieById, updateMovie } from '../services/movieService';
 import '../styles/movie.css';
+import { toast } from 'react-toastify';
 
 const movieSchema = z.object({
     title: z.string().min(1, 'Tiêu đề là bắt buộc.'),
@@ -96,11 +97,11 @@ export function MovieEdit() {
                 type: data.type,
                 isPublic: data.isPublic,
             });
-            alert('Cập nhật phim thành công!');
+            toast.success('Cập nhật phim thành công!');
             navigate('/admin/movies');
         } catch (error) {
             setServerError('Cập nhật thất bại. Vui lòng kiểm tra lại và thử lại.');
-            console.error(error);
+           
         }
     };
 

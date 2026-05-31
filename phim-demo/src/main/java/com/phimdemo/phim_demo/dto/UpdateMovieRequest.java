@@ -32,6 +32,25 @@ public class UpdateMovieRequest {
     private Optional<@Min(value = 1800, message = "ReleaseYear không hợp lệ") Integer> releaseYear = Optional.empty();
 
     private Optional<String> url = Optional.empty();
+    private Optional<String> urlKey = Optional.empty();
+
+    private Optional<String> thumbnailKey = Optional.empty();
+
+    public Optional<String> getUrlKey() {
+        return urlKey;
+    }
+
+    public void setUrlKey(Optional<String> urlKey) {
+        this.urlKey = urlKey;
+    }
+
+    public Optional<String> getThumbnailKey() {
+        return thumbnailKey;
+    }
+
+    public void setThumbnailKey(Optional<String> thumbnailKey) {
+        this.thumbnailKey = thumbnailKey;
+    }
 
     public UpdateMovieRequest() {
     }
